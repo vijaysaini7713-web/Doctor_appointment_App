@@ -1,1 +1,1 @@
-export default function Reception(){return <main className="max-w-3xl mx-auto p-8"><h1 className="text-3xl font-bold">Receptionist workspace</h1><p className="mt-3 text-slate-600">Protected clinic access and token creation are exposed through authenticated APIs. UI integration is the next milestone.</p><a className="text-teal-700 mt-5 inline-block" href="/">← Home</a></main>}
+import {StaffQueue} from '@/components/staff-queue';export default function Reception(){return <StaffQueue mode="reception"/>;}

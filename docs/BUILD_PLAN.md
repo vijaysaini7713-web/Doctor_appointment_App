@@ -1,39 +1,26 @@
-# MediQueue phased development plan
+# MediQueue delivery checklist
 
-## Current status
-Initial Next.js project and PostgreSQL migration are included. This is an **early development scaffold**, not a completed production system.
+## Implemented code
+- Next.js landing, email / Google auth UI
+- Patient doctor list, session booking and My Appointments
+- Clinic Admin: bootstrap clinic, add doctor, medical registration field, create sessions, invite staff
+- Platform reviewer guard for doctor approval (credentials must be checked outside the app)
+- Receptionist walk-in token registration and token status management
+- Doctor queue page, consultation start and completion
+- Supabase tables, basic RLS deny-by-default, transactional database functions and audited queue changes
+- API authorization and Zod validation foundation
 
-### Phase 1: Infrastructure
-- [x] Next.js/TypeScript project skeleton
-- [x] Schema for clinics, doctors, patients, sessions, appointments and queue
-- [x] Authenticated walk-in and receptionist reorder API foundation
-- [ ] Email / Google login UI with secure session management
-- [ ] Seed/demo tenant and clinic onboarding
-- [ ] CI lint/build/test workflow
+## Must finish/test before production
+1. Configure Supabase and execute migrations.
+2. Resolve build/typecheck errors, if any; run integration tests with test tenant and dummy patients.
+3. Add consistent auth cookie/session strategy, role routing and password reset.
+4. Add clinic-specific timezone presentation, preferred slot limits, arrival grace and patient self check-in.
+5. Add live realtime subscriptions and reliable ETA.
+6. Implement manual reorder UI, QR code tracking and WhatsApp consent.
+7. Verify staff/doctor identities, strengthen platform verifier workflow and audit reviewer.
+8. Test simultaneous bookings, two-clinic isolation, rate limiting, cancellations, no-shows, recovery.
+9. Conduct security and privacy compliance review before medical/patient use.
+10. Deploy staging then production and connect custom domain.
 
-### Phase 2: Working pilot
-- [ ] Receptionist UI: register patient, open session, call next, skip and return
-- [ ] Doctor consultation start / complete / pause
-- [ ] Online appointment API with capacity enforcement and idempotency
-- [ ] Patient-facing booking and check-in flow
-- [ ] Cross-user race condition tests and optimistic queue version handling
-
-### Phase 3: Real-time
-- [ ] Clinic-scoped realtime subscriptions with server authorization
-- [ ] Reconnect recovery and live ETA rolling average
-- [ ] Public token-only queue display and secure personal tracking QR
-- [ ] Notifications with explicit patient consent
-
-### Phase 4: SaaS & launch
-- [ ] Location search and mapping
-- [ ] Clinic subscription billing and analytics
-- [ ] Accessibility, load tests, security assessment and DPDP legal review
-- [ ] Staging deployment before accepting real patient data
-
-## Key operational rules
-Online and walk-in patients share one doctor-session queue. Token number never changes when staff reorder a patient. Every manual reorder is audited with a reason. Online slots are preferences, not guarantees. Staff cannot view other clinics' patient records. Patient details never appear on public queue boards.
-
-## Run locally
-Use Node 20+ (or supported LTS), `npm install`, copy `.env.example` to `.env.local`, configure Supabase project, run `0001_initial.sql`, then `npm run dev`.
-
-**Security note:** Service-role credentials must only be deployed server-side. Do not put real patient data in a demo environment. API error paths should not reveal internal database details.
+## Known boundary
+A GitHub commit is NOT an operational deployment. Never use real patient records in unreviewed environments.

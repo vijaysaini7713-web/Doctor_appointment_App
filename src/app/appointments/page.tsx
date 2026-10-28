@@ -1,0 +1,5 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {Shell,Panel,Notice,RequireLogin,useApi} from '@/components/portal';
+type Obj=Record<string,any>;
+export default function Appointments(){const {token,loading,request}=useApi();const [records,setRecords]=useState<Obj[]>([]);const [message,setMessage]=useState('');useEffect(()=>{if(token)request('app?view=mine').then(setRecords).catch(e=>setMessage(e.message));},[token,request]);return <Shell title="My Appointments">{!token?<RequireLogin token={token} loading={loading}/>:<><Notice message={message}/>{records.map(a=><Panel key={a.id}><div className="flex justify-between gap-4"><div><h2 className="font-bold">{a.doctor_sessions?.doctors?.display_name??'Doctor'}</h2><p className="text-sm">{a.doctor_sessions?.clinics?.name}</p><p className="text-sm">{new Date(a.doctor_sessions?.starts_at).toLocaleString()}</p></div><div className="text-right"><p className="text-2xl font-bold text-teal-700">#{a.queue_entries?.[0]?.token_number??'—'}</p><p className="text-sm">{a.status}</p></div></div></Panel>)}{!records.length&&<Panel>No bookings yet. Visit Find Doctors to book.</Panel>}</>}</Shell>;}
